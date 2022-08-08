@@ -1,0 +1,21 @@
+<section class="cConverterCustomStyle cConverter__container">
+    <link rel="stylesheet" href="cConverter/cConverter.css">
+    <div class="cConverter__inputs">
+        <div>
+            <input type="number" step=".01" id="cConverter__inputBaseCurrency" placeholder="0.00"  onkeydown="return event.keyCode !== 69">
+            <select id="cConverter__baseCurrencyDropdown"></select>
+        </div>
+        <div>
+            <input type="number" step=".01" id="cConverter__inputTargetCurrency" readonly placeholder="0.00">
+            <select id="cConverter__targetCurrencyDropdown"></select>
+        </div>
+    </div>
+    <div class="cConverter__result">
+        <div class="cConverter__baselabel">
+            <span id="cConverter__baseCurrency_label"></span>
+            <span id="cConverter__label"></span>
+        </div>
+        <div class="cConverter__resultlabel">
+            <span id="cConverter__result"></span>
+        </div>
+</section>

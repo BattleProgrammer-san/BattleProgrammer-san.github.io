@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <!-- You need to run this example page on a server, be it online or local, or else CORS will strike the injection down. -->
+    <head>
+        <title>
+            Currency Converter Test Assignment
+        </title>
+        <link rel="icon" type="image/png" href="assets/files/favicon.png">
+        <link rel="stylesheet" href="assets/styles/style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <header>
+            <div class="header">
+                <h1>
+                    Währungsrechner 
+                </h1>
+            </div>
+        </header>
+
+        <section class="mainBod">
+            <div class="converterContainer">
+                <h2>Währungsrechner</h2>
+                <div id="injectHere"></div>
+            </div>
+            
+            <div class="introductoryText">
+                <h2>
+                    Kurzerklärung
+                </h2>
+                <p>
+                    Dies ist ein simpler Währungsrechner.
+                </p>
+                <p>
+                    Auf dieser Seite kann man sehen, wie einfach es ist Sprache und Datenset anzupassen.
+                    Die Initialisierung des W#hrungsrechners kann um optionen ergänzt werden. 
+                    Auf dieser Seite wurden die folgenden Optionen verwendet:
+                </p>
+                <pre>
+<code>
+    options = {
+        "localePath" : "/overrideExamples/de-DE.json",
+        "overrideCurrencies": "/overrideExamples/exchangeRates.json",
+        "showCurrencySymbol": false
+    }
+    cConverter.init("injectHere", options);</code>
+                </pre> 
+                <p>
+                    Alle Optionen sind optional. Die Übersetzungen und neuen Währungen können überschrieben werden.
+                    Der boolsche Parameter "showCurrencySymbol" kann wie hier deaktiviert werden, um das Währungssymbol im Ergebnis auszublenden. 
+                </p>
+                <p>
+                    Außerdem wurde auf dieser Seite das Styling per inline Style überschrieben. Dazu sollte die Klasse
+                </p>
+                <pre>
+<code>
+    .cConverterCustomStyle.cConverter__container</code>
+                </pre> 
+                <p>
+                    verwendet werden.
+                </p>
+                <p>
+                    Das Grundbeispiel kann <a href="index.html">hier</a> gefunden werden.
+                </p>
+            </div>
+
+
+        </section>
+
+        <footer>
+            <div class="footer">
+                <p>
+                    Gemacht von Leroy Baum 2022
+                </p>
+                <p>
+                    Für FactSet
+                </p>
+            </div>
+        </footer>
+
+    </body>
+    <script src="cConverter/cConverter.js"></script>
+    <script>
+        options = {
+            "localePath" : "/overrideExamples/de-DE.json",
+            "overrideCurrencies": "/overrideExamples/exchangeRates.json",
+            "showCurrencySymbol": false
+        }
+        cConverter.init("injectHere", options);
+    </script>
+
+    <style>
+        .cConverterCustomStyle.cConverter__container{
+            background-color: #d2e6ff;
+            border-radius: 5px;
+            padding: 20px 10px  10px 10px;
+        }
+
+        .cConverterCustomStyle.cConverter__container #cConverter__inputTargetCurrency{
+            background-color: #5e6b7b;
+        }
+        .cConverterCustomStyle.cConverter__container #cConverter__inputTargetCurrency::placeholder{
+            color: #fff;
+        }
+
+        .cConverterCustomStyle.cConverter__container #cConverter__result{
+            text-shadow: 2px 2px 4px #fff;
+        }
+
+        header, footer, .mainBod pre{
+            background-color: #5e6b7b;
+        }
+    </style>
+</html>

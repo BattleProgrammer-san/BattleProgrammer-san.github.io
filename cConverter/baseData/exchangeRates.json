@@ -1,0 +1,54 @@
+{
+    "EUR" : {
+        "currency" : "EUR",
+        "currency_symbol" : "€",
+        "currency_symbol_position" : "after",
+        "base_currency": true,
+        "exchange_rates": {
+            "USD": 1.2897,
+            "CHF": 1.3135,
+            "GBP": 0.8631
+        }
+    },
+    "USD" : {
+        "currency" : "USD",
+        "currency_symbol" : "$",
+        "currency_symbol_position" : "before",
+        "base_currency": true,
+        "exchange_rates": {
+            "JPY": 109.62 
+        }
+    },
+    "CHF" : {
+        "currency" : "CHF",
+        "currency_symbol" : "SFr.",
+        "currency_symbol_position" : "after",
+        "base_currency": true,
+        "exchange_rates": {
+            "USD": 0.9960
+        }
+    },
+    "GBP" : {
+        "currency" : "GBP",
+        "currency_symbol" : "£",
+        "currency_symbol_position" : "before",
+        "base_currency": true,
+        "exchange_rates": {
+            "CAD": 1.7574 
+        }
+    },
+    "JPY" : {
+        "currency" : "JPY",
+        "currency_symbol" : "¥",
+        "currency_symbol_position" : "before",
+        "base_currency": false,
+        "exchange_rates": {}
+    },
+    "CAD" : {
+        "currency" : "CAD",
+        "currency_symbol" : "$",
+        "currency_symbol_position" : "before",
+        "base_currency": false,
+        "exchange_rates": {}
+    }
+}

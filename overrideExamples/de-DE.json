@@ -1,0 +1,10 @@
+{
+    "locale": "de-DE",
+    "EUR" : "Euro",
+    "USD" : "US Dollar",
+    "GBP" : "Britische Pfund",
+    "CAD" : "Kanada Dollar",
+    "CHF" : "Schweizer Franken",
+    "JPY" : "Japanische Yen",
+    "conversion_label": "entsprechen"
+}
