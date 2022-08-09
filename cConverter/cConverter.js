@@ -96,7 +96,7 @@ const cConverter = new function(){
         return amount * exchangeRate;
     }
 
-    const anyChange = function(){
+    const anyFormChange = function(){
         const baseCurrency = document.getElementById("cConverter__baseCurrencyDropdown").value;
         const targetCurrency = document.getElementById("cConverter__targetCurrencyDropdown").value;
         const amount = document.getElementById("cConverter__inputBaseCurrency").value;
@@ -155,17 +155,17 @@ const cConverter = new function(){
         const baseDropdown = document.getElementById("cConverter__baseCurrencyDropdown");
         baseDropdown.addEventListener("change", () => {
             fillTargetDropdown(currencies, baseDropdown.value);
-            anyChange();
+            anyFormChange();
         } );
 
         const targetDropdown = document.getElementById("cConverter__targetCurrencyDropdown");
         targetDropdown.addEventListener("change", () => {
-            anyChange();
+            anyFormChange();
         });
 
         const inputBaseCurrency = document.getElementById("cConverter__inputBaseCurrency");
         inputBaseCurrency.addEventListener("keyup", () => {
-            anyChange();
+            anyFormChange();
         });
     }
 }
