@@ -1,0 +1,152 @@
+body{
+    background-color: #090909;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #e4e4e4;
+    margin: 0;
+    padding: 0;
+}
+
+a{
+    color: #e4e4e4;
+    text-decoration: none;
+}
+
+.header{
+    padding: 10px;
+    margin: 10px;
+    text-align: left;
+    border: 1px solid #4d4d4d;
+    overflow: hidden;
+}
+
+.header-content{
+    position: relative;
+    padding: 20px;
+    margin: 20px;
+    padding-left: 100px;
+    border: 1px solid #4d4d4d;
+    background-color: #090909;
+}
+
+.header .header-content::before{
+    background-repeat: repeat;
+    background-image: linear-gradient(to bottom, transparent, transparent 20%, #090909 20%, #090909 90%, transparent 90%),
+    linear-gradient(to right, transparent, transparent 20%, #090909 20%, #090909 90%, transparent 90%),
+    linear-gradient(to right, #2a2a2a, #2a2a2a 20%, #090909 20%, #090909 90%, #2a2a2a 90%);
+    background-size: 10px 10px;
+    content: "";
+    position: absolute;
+    width: 300%;
+    height: 300%;
+    top: -100%;
+    left: -100%;
+    z-index: -1;
+    transform: rotate(30deg);
+}
+
+.body-content{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* fill height until bottom */
+    min-height: calc(100vh - 220px);
+}
+
+.navigation{
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #4d4d4d;
+    background-color: #090909;
+    width: 300px;
+    height: 100%;
+    text-align: center;
+}
+
+.navigation input[type="checkbox"]{
+    display: none;
+}
+.navigation label{
+    display: block;
+    padding: 10px;
+    border: 1px solid #4d4d4d;
+    background-color: #090909;
+    cursor: pointer;
+}
+.navigation label:hover{
+    background-color: #2a2a2a;
+}
+
+.nav-item{
+    height: 50px;
+}
+
+.nav-subitem{
+    width: 100%;
+    height: 0px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    z-index: 10;
+}
+
+.nav-subitem a{
+    display: block;
+    padding: 10px;
+    background-color: #090909;
+    width: calc(100% - 22px);
+    height: 30px;
+    transition: all 0.3s ease;
+    position: relative;
+    border: 1px solid #4d4d4d;
+    border-top: none;
+}
+
+.nav-subitem a:hover{
+    background-color: #2a2a2a;
+}
+
+.navigation input[type="checkbox"]:checked ~ .nav-subitem-1{
+    height: 120px;
+}
+.navigation input[type="checkbox"]:checked ~ .nav-subitem-2{
+    height: 60px;
+}
+.navigation input[type="checkbox"]:checked ~ .nav-subitem-3{
+    height: 60px;
+}
+
+.preview{
+    margin: 10px;
+    border: 1px solid #4d4d4d;
+    background-color: #090909;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    min-height: calc(100vh - 260px);
+    display: block;
+    position: relative;
+}
+
+.preview-item{
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.preview-item.active{
+    opacity: 1;
+}
+
+.preview-games{
+    background-color: green;
+}
+.preview-projects{
+    background-color: blue;
+}
+.preview-about{
+    background-color: red;
+}

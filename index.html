@@ -4,19 +4,47 @@
     <head>
         <title>BattleProgrammers Playground</title>
         <charset="utf-8">
+        <link rel="stylesheet" href="./assets/css/main.css">
     </head>
     <body>
-        <h1>BattleProgrammers Playground</h1>
-        <p>
-            This is just a quick landing page for silly things
-            I've made.
-            I'm a web developer, so this is just a
-            quick and dirty way to get things up and
-            running.
-        </p>
-        <h2>Games</h2>
-        <ul>
-            <li><a href="./sites/snakeClone.html">Snake Clone</a></li>
-            <li><a href="./sites/flappyBirdClone.html">Flappy Bird Clone</a></li>
-        </ul>
+        <div class="main-content">
+            <div class="header">
+                <div class="header-content">
+                    <h1>BattleProgrammers Playground</h1>
+                </div>
+            </div>
+            <div class="body-content">
+                <div class="preview">
+                    <div class="preview-item preview-games"></div>
+                    <div class="preview-item preview-projects"></div>
+                    <div class="preview-item preview-about"></div>            
+                </div>
+                <div class="navigation">
+                    <div class="nav-item" id="games">
+                        <input type="checkbox" name="games" value="games" id="chk-games">
+                        <label for="chk-games">Games</label>
+                        <div class="nav-subitem nav-subitem-1">
+                            <a href="./sites/snakeClone.html">Snake Clone</a>
+                            <a href="./sites/flappyBirdClone.html">Flappy Bird Clone</a>
+                        </div>
+                    </div>
+                    <div class="nav-item" id="projects">
+                        <input type="checkbox"  name="projects" value="projects" id="chk-projects">
+                        <label for="chk-projects">Projects</label>
+                        <div class="nav-subitem nav-subitem-2">
+                            <a href="#">Coming Soon</a>
+                        </div>
+                    </div>
+                    <div class="nav-item" id="about">
+                        <input type="checkbox" name="about" value="about" id="chk-about">
+                        <label for="chk-about">About</label>
+                        <div class="nav-subitem nav-subitem-3">
+                            <a href="#">Coming Soon</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="./assets/js/main.js"></script>
+    </body>
 </html>
