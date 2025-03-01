@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html data-theme="dark" data-controls="true">
+<head>
+    <title>Hag Hours Bingo</title>
+    <style>
+        :root[data-theme="light"] {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --cell-bg: #ffffff;
+            --cell-border: #333333;
+            --cell-checked: #3bffb1;
+            --button-bg: #e0e0e0;
+        }
+        
+        :root[data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --cell-bg: #2d2d2d;
+            --cell-border: #666666;
+            --cell-checked: #00662e;
+            --button-bg: #404040;
+        }
+
+        /* Animation keyframes */
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(-100%); opacity: 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes checkCell {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+
+        /* Updated styles */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .container {
+            display: flex;
+            gap: 20px;
+            position: relative;
+            min-height: 600px;
+        }
+
+        .controls-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 300px;
+            opacity: 1;
+            transform: translateX(0);
+            transition: all 0.3s ease-in-out;
+            margin-right: 20px;
+        }
+
+        :root[data-controls="false"] .controls {
+            width: 0;
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        
+        .control-toggle {
+            height: 40px;
+            min-width: 24px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--button-bg);
+            border: 1px solid var(--cell-border);
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: monospace;
+            transition: all 0.2s ease;
+        }
+
+        .control-toggle:hover {
+            background: var(--cell-border);
+        }
+        
+        .board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            flex-grow: 1;
+            animation: fadeIn 0.3s ease-out;
+            height: calc(100vh - 200px);
+            width: calc(100vh - 200px);
+            max-width: calc(100vh - 200px);
+            aspect-ratio: 1;
+        }
+        
+        .cell {
+            aspect-ratio: 1;
+            border: 1px solid var(--cell-border);
+            padding: 10px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            background: var(--cell-bg);
+            border-radius: 4px;
+            min-height: 60px;
+            height: calc((100vh - 300px) / 5);
+            width: calc((100vh - 300px) / 5);
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        
+        .cell:hover {
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .cell.checked {
+            background: var(--cell-checked);
+            animation: checkCell 0.3s ease;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 300px;
+            margin: 10px 0;
+            background: var(--cell-bg);
+            color: var(--text-color);
+            border: 1px solid var(--cell-border);
+            padding: 10px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--cell-checked);
+            box-shadow: 0 0 0 2px rgba(255, 235, 59, 0.2);
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 5px 0;
+            background: var(--button-bg);
+            color: var(--text-color);
+            border: 1px solid var(--cell-border);
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background: var(--cell-border);
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            background: var(--cell-bg);
+            color: var(--text-color);
+            border: 1px solid var(--cell-border);
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--cell-checked);
+            box-shadow: 0 0 0 2px rgba(255, 235, 59, 0.2);
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+        
+
+        .firework {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: gold;
+            border-radius: 50%;
+            animation: launch 0.5s ease-out;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            animation: explode var(--speed) ease-out;
+            transform: rotate(var(--angle));
+            pointer-events: none;
+        }
+
+        @keyframes launch {
+            0% { top: 100vh; transform: scale(1); }
+            100% { top: 5vh; transform: scale(0.1); }
+        }
+
+        @keyframes explode {
+            0% { transform: rotate(var(--angle)) translateX(0); opacity: 1; }
+            100% { transform: rotate(var(--angle)) translateX(100px); opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+    <h1>Hag Hours Bingo</h1>
+    
+    <div class="container">
+        <div class="controls-wrapper">
+            <button class="control-toggle" onclick="toggleControls()">&lt;</button>
+            <div class="controls">
+                <textarea id="cards" placeholder="Enter bingo cards (one per line)">Chat starts crying
+                    Joint/back pain mentioned
+                    Got the slang correct 1st try
+                    Defunct business mentioned
+                    Says something unhinged
+                    "Back in my day..."
+                    Pupmaxxing joke
+                    Dead meme
+                    Deez nuts
+                    Guest attempts British accent
+                    "Kids These days..."
+                    Tummy hort mentioned
+                    Joint cracking sound
+                    Bad eyesight
+                    Snort laugh
+                    Old social media mentioned
+                    Rizz
+                    Scuff
+                    Dial-up mentioned
+                    Yawn
+                    How do you do fellow kids moment
+                    Burped
+                    Obsolete tech mentioned
+                    Got the sound correct 1st try<textarea>
+                <button onclick="createBoard()">Create Board</button>
+                <input id="shareCode" placeholder="Enter share code" />
+                <button onclick="loadSharedBoard()">Load Shared Board</button>
+            </div>
+        </div>
+        <div id="board" class="board"></div>
+    </div>
+
+    <script>
+                let currentBoard = [];
+        let currentLines = [];
+        
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            html.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark');
+        }
+
+        function toggleControls() {
+            const html = document.documentElement;
+            const currentControls = html.getAttribute('data-controls');
+            html.setAttribute('data-controls', currentControls === 'true' ? 'false' : 'true');
+            document.querySelector('.control-toggle').innerText = currentControls === 'true' ? '>' : '<';
+        }
+        
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        function checkWin() {
+            for (let i = 0; i < 5; i++) {
+                if (currentBoard.slice(i * 5, (i + 1) * 5).every(cell => cell.checked)) return true;
+            }
+            for (let i = 0; i < 5; i++) {
+                if (currentBoard.filter((_, index) => index % 5 === i).every(cell => cell.checked)) return true;
+            }
+            if ([0, 6, 12, 18, 24].every(i => currentBoard[i].checked)) return true;
+            if ([4, 8, 12, 16, 20].every(i => currentBoard[i].checked)) return true;
+            
+            return false;
+        }
+        
+        function createBoard() {
+            const textarea = document.getElementById('cards');
+            currentLines = textarea.value.split('\n').filter(line => line.trim());
+            
+            if (currentLines.length < 24) {
+                alert('Please enter at least 24 lines');
+                return;
+            }
+            
+            if (currentLines.length > 24) {
+                currentLines = shuffleArray([...currentLines]).slice(0, 24);
+            }
+            
+            const shuffledLines = shuffleArray([...currentLines]);
+            currentBoard = [];
+            
+            const boardDiv = document.getElementById('board');
+            boardDiv.innerHTML = '';
+            
+            let lineIndex = 0;
+            for (let i = 0; i < 25; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.onclick = () => toggleCell(i);
+                
+                if (i === 12) {
+                    cell.textContent = 'FREE SPACE';
+                    currentBoard[i] = { content: 'FREE SPACE', checked: false };
+                } else {
+                    cell.textContent = shuffledLines[lineIndex];
+                    currentBoard[i] = { content: shuffledLines[lineIndex], checked: false };
+                    lineIndex++;
+                }
+                
+                boardDiv.appendChild(cell);
+            }
+            
+            generateShareCode();
+        }
+        
+        function toggleCell(index) {
+            if (!currentBoard[index]) return;
+            
+            currentBoard[index].checked = !currentBoard[index].checked;
+            const cells = document.getElementsByClassName('cell');
+            cells[index].classList.toggle('checked');
+            
+            if (checkWin()) {
+                showWinMessage();
+            }
+            
+            generateShareCode();
+        }
+        
+        function generateShareCode() {
+            if (!currentBoard.length) return;
+            
+            let code = '';
+            for (let i = 0; i < currentBoard.length; i++) {
+                code += `${i.toString().padStart(2, '0')}|${currentBoard[i].content}|${currentBoard[i].checked ? '1' : '0'};`;
+            }
+            
+            document.getElementById('shareCode').value = btoa(code);
+        }
+
+        function loadSharedBoard() {
+            try {
+                const code = atob(document.getElementById('shareCode').value);
+                const cells = code.split(';').filter(c => c);
+                
+                currentBoard = Array(25).fill().map(() => ({ content: '', checked: false }));
+                currentBoard[12] = { content: 'FREE SPACE', checked: false };
+                
+                for (const cell of cells) {
+                    const [index, content, checked] = cell.split('|');
+                    const cellIndex = parseInt(index);
+                    currentBoard[cellIndex] = {
+                        content: content,
+                        checked: checked === '1'
+                    };
+                }
+                
+                const boardDiv = document.getElementById('board');
+                boardDiv.innerHTML = '';
+                
+                for (let i = 0; i < 25; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    if (currentBoard[i].checked) cell.classList.add('checked');
+                    cell.onclick = () => toggleCell(i);
+                    cell.textContent = currentBoard[i].content;
+                    boardDiv.appendChild(cell);
+                }
+                
+                if (checkWin()) {
+                    showWinMessage();
+                }
+            } catch (error) {
+                alert('Invalid share code');
+            }
+        }
+
+        function showWinMessage() {
+            launchFireworks();
+        }
+
+        function randomTime(min, max) {
+            return Math.random() * (max - min + 1) + min;
+        }
+
+        function launchFireworks() {
+            for(let i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    createFirework();
+                }, i * 50 * randomTime(1, 3));
+            }
+        }
+
+        function createFirework() {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = Math.random() * 100 + 'vw';
+            firework.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+            document.body.appendChild(firework);
+            
+            setTimeout(() => {
+                const particles = 30;
+                for(let i = 0; i < particles; i++) {
+                    createParticle(firework.offsetLeft, firework.offsetTop);
+                }
+                firework.remove();
+            }, 500);
+        }
+
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            particle.style.setProperty('--angle', Math.random() * 360 + 'deg');
+            particle.style.setProperty('--speed', Math.random() * 2 + 1 + 's');
+            particle.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            document.body.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 2000);
+        }
+
+    </script>
+</body>
+</html>
