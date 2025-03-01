@@ -4,21 +4,23 @@
     <title>Hag Hours Bingo</title>
     <style>
         :root[data-theme="light"] {
-            --bg-color: #ffffff;
-            --text-color: #000000;
-            --cell-bg: #ffffff;
-            --cell-border: #333333;
-            --cell-checked: #3bffb1;
-            --button-bg: #e0e0e0;
+            --bg-color: #F2ECE0;
+            --text-color: #1A1712;
+            --checked-text-color: #1A1712;
+            --cell-bg: #F2ECE0;
+            --cell-border: #1A1712;
+            --cell-checked: #1A1712;
+            --button-bg: #F2ECE0;
         }
         
         :root[data-theme="dark"] {
-            --bg-color: #1a1a1a;
-            --text-color: #ffffff;
-            --cell-bg: #2d2d2d;
-            --cell-border: #666666;
-            --cell-checked: #00662e;
-            --button-bg: #404040;
+            --bg-color: #1A1712;
+            --text-color: #F2ECE0;
+            --checked-text-color: #1A1712;
+            --cell-bg: #1A1712;
+            --cell-border: #F2ECE0;
+            --cell-checked: #F2ECE0;
+            --button-bg: #1A1712;
         }
 
         /* Animation keyframes */
@@ -140,6 +142,7 @@
         
         .cell.checked {
             background: var(--cell-checked);
+            color: var(--checked-text-color);
             animation: checkCell 0.3s ease;
         }
         
