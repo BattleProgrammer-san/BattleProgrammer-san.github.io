@@ -1,0 +1,508 @@
+:root[data-theme="light"] {
+    --bg-color: #F2ECE0;
+    --text-color: #1A1712;
+    --checked-text-color: #F2ECE0;
+    --cell-bg: #F2ECE0;
+    --cell-border: #1A1712;
+    --cell-checked: #1A1712;
+    --button-bg: #F2ECE0;
+    --overlay-bg: rgba(242, 236, 224, 0.95);
+}
+
+:root[data-theme="dark"] {
+    --bg-color: #1A1712;
+    --text-color: #F2ECE0;
+    --checked-text-color: #1A1712;
+    --cell-bg: #1A1712;
+    --cell-border: #F2ECE0;
+    --cell-checked: #F2ECE0;
+    --button-bg: #1A1712;
+    --overlay-bg: rgba(26, 23, 18, 0.95);
+}
+
+/* Parallax Background */
+.parallax-background {
+    position: fixed;
+    top: -5%;
+    left: -5%;
+    width: 110%;
+    height: 110%;
+    background-image: url('./assets/img/bonjBackground.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    filter: blur(5px);
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+    pointer-events: none;
+}
+
+/* Ensure body and content overlay properly */
+body {
+    position: relative;
+    font-family: Arial, sans-serif;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    color: var(--text-color);
+    transition: color 0.3s;
+    background-color: transparent;
+    z-index: 1;
+}
+
+/* Semi-transparent overlay for better readability */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(26, 23, 18, 0.6); /* Dark theme overlay */
+    z-index: -1;
+    pointer-events: none;
+    transition: background-color 0.3s;
+}
+
+:root[data-theme="light"] body::before {
+    background-color: rgba(242, 236, 224, 0.6); /* Light theme overlay */
+}
+
+/* Animation keyframes */
+@keyframes slideIn {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(-100%); opacity: 0; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes checkCell {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+/* Menu toggle animation */
+@keyframes topBarCross {
+    0% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(14px) rotate(0); }
+    100% { transform: translateY(14px) rotate(45deg); }
+}
+
+@keyframes topBarReverse {
+    0% { transform: translateY(8px) rotate(45deg); }
+    50% { transform: translateY(8px) rotate(0); }
+    100% { transform: translateY(0) rotate(0); }
+}
+
+@keyframes middleBarFade {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+@keyframes middleBarShow {
+    0% { opacity: 0; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes bottomBarCross {
+    0% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-8px) rotate(0); }
+    100% { transform: translateY(-8px) rotate(-45deg); }
+}
+
+@keyframes bottomBarReverse {
+    0% { transform: translateY(-8px) rotate(-45deg); }
+    50% { transform: translateY(-8px) rotate(0); }
+    100% { transform: translateY(0) rotate(0); }
+}
+
+/* Updated styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+header {
+    text-align: left;
+    margin-bottom: 20px;
+    margin-left: 20%;
+    position: relative;
+    height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 150px;
+    height: auto;
+    max-height: 60px;
+    object-fit: contain;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+    animation: fadeIn 0.3s ease-out;
+    width: min(80vw, 80vh);
+    height: min(80vw, 80vh);
+    margin: 0 auto;
+}
+
+.cell {
+    aspect-ratio: 1;
+    border: 1px solid var(--cell-border);
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: var(--cell-bg);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    user-select: none;
+    font-size: clamp(10px, 2vmin, 16px);
+    word-break: break-word;
+    overflow: hidden;
+    backdrop-filter: blur(2px);
+    background-color: rgba(26, 23, 18, 0.7);
+}
+
+:root[data-theme="light"] .cell {
+    background-color: rgba(242, 236, 224, 0.7);
+}
+
+.cell:hover {
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.cell.checked {
+    background: var(--cell-checked);
+    color: var(--checked-text-color);
+    animation: checkCell 0.3s ease;
+}
+
+textarea {
+    width: 100%;
+    height: 200px;
+    margin: 10px 0;
+    background: var(--cell-bg);
+    color: var(--text-color);
+    border: 1px solid var(--cell-border);
+    padding: 10px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--cell-checked);
+    box-shadow: 0 0 0 2px rgba(255, 235, 59, 0.2);
+}
+
+button {
+    padding: 10px 20px;
+    margin: 5px 0;
+    background: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--cell-border);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    background: var(--cell-checked);
+    color: var(--checked-text-color);
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    background: var(--cell-bg);
+    color: var(--text-color);
+    border: 1px solid var(--cell-border);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--cell-checked);
+    box-shadow: 0 0 0 2px rgba(255, 235, 59, 0.2);
+}
+
+/* Overlay and menu styles */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay-bg);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: background-color 0.3s, opacity 0.5s ease;
+}
+
+.overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.overlay-content {
+    background: var(--bg-color);
+    padding: 20px;
+    border-radius: 10px;
+    width: min(500px, 90%);
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(20px);
+    transition: transform 0.5s ease;
+}
+
+.overlay.active .overlay-content {
+    transform: translateY(0);
+}
+
+.menu-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 30px;
+    height: 25px;
+    cursor: pointer;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: var(--text-color);
+    border-radius: 3px;
+    transition: all 0.3s;
+}
+
+.menu-toggle span:nth-child(1) {
+    transform-origin: center;
+}
+
+.menu-toggle span:nth-child(3) {
+    transform-origin: center;
+}
+
+.menu-toggle.active span:nth-child(1) {
+    animation: topBarCross 0.3s forwards;
+}
+
+.menu-toggle:not(.active) span:nth-child(1) {
+    animation: topBarReverse 0.3s forwards;
+}
+
+.menu-toggle.active span:nth-child(2) {
+    animation: middleBarFade 0.3s forwards;
+}
+
+.menu-toggle:not(.active) span:nth-child(2) {
+    animation: middleBarShow 0.3s forwards;
+}
+
+.menu-toggle.active span:nth-child(3) {
+    animation: bottomBarCross 0.3s forwards;
+}
+
+.menu-toggle:not(.active) span:nth-child(3) {
+    animation: bottomBarReverse 0.3s forwards;
+}
+
+.close-overlay {
+    align-self: flex-end;
+    margin-top: 20px;
+}
+
+.label {
+    margin-top: 10px;
+    font-weight: bold;
+    display: block;
+}
+
+.shuffle-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    background: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--cell-border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.2s ease;
+}
+
+.shuffle-button:hover {
+    background: var(--cell-checked);
+    color: var(--checked-text-color);
+}
+
+.shuffle-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.firework {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: gold;
+    border-radius: 50%;
+    animation: launch 0.5s ease-out;
+    pointer-events: none;
+}
+
+.particle {
+    position: fixed;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    animation: explode var(--speed) ease-out;
+    transform: rotate(var(--angle));
+    pointer-events: none;
+}
+
+@keyframes launch {
+    0% { top: 100vh; transform: scale(1); }
+    100% { top: 5vh; transform: scale(0.1); }
+}
+
+@keyframes explode {
+    0% { transform: rotate(var(--angle)) translateX(0); opacity: 1; }
+    100% { transform: rotate(var(--angle)) translateX(100px); opacity: 0; }
+}
+
+/* Mobile Specific Styles */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    header {
+        margin-left: 5%;
+        height: 50px;
+        margin-top: 40px;
+    }
+    
+    .logo {
+        width: 120px;
+        max-height: 50px;
+    }
+    
+    .board {
+        width: min(90vw, 90vh);
+        height: min(90vw, 90vh);
+    }
+    
+    .cell {
+        padding: 5px;
+    }
+    
+    
+    .shuffle-icon {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .overlay-content {
+        padding: 15px;
+    }
+    
+    textarea {
+        height: 150px;
+    }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+    header {
+        margin-left: 0;
+        justify-content: center;
+        margin-top: 50px;
+    }
+    
+    .logo {
+        width: 100px;
+    }
+    
+    .board {
+        width: 95vw;
+        height: 95vw;
+    }
+    
+    .cell {
+        font-size: clamp(8px, 2vmin, 12px);
+        padding: 3px;
+    }
+    
+    .menu-toggle, .shuffle-button {
+        top: 15px;
+    }
+    
+    .shuffle-button {
+        left: 15px;
+    }
+    
+    .menu-toggle {
+        right: 15px;
+    }
+    
+    .container {
+        margin-top: 10px;
+    }
+}
