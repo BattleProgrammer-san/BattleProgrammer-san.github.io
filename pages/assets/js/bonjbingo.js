@@ -798,66 +798,92 @@ function downloadScreenshot() {
     document.body.removeChild(link);
 }
 
-// Function to share on Twitter/X
 function shareOnTwitter() {
     if (!window.screenshotImageData) {
         alert('No screenshot available. Please take a screenshot first.');
         return;
     }
     
-    // On mobile, use Web Share API if available
-    if (window.innerWidth <= 768 && navigator.share) {
+    // Try Web Share API first (for mobile devices)
+    if (navigator.share) {
         try {
             // Create a blob from the data URL
-            const byteString = atob(window.screenshotImageData.split(',')[1]);
-            const mimeString = window.screenshotImageData.split(',')[0].split(':')[1].split(';')[0];
-            const ab = new ArrayBuffer(byteString.length);
-            const ia = new Uint8Array(ab);
-            
-            for (let i = 0; i < byteString.length; i++) {
-                ia[i] = byteString.charCodeAt(i);
-            }
-            
-            const blob = new Blob([ab], {type: mimeString});
+            const blob = dataURItoBlob(window.screenshotImageData);
             const file = new File([blob], 'hag-hours-bingo.png', { type: 'image/png' });
             
-            const shareData = {
+            // First try with files
+            const shareDataWithFile = {
                 title: 'Hag Hours Bingo',
                 text: 'Check out my Hag Hours Bingo board! #HagHours',
                 files: [file]
             };
             
             // Check if sharing files is supported
-            if (navigator.canShare && navigator.canShare(shareData)) {
-                navigator.share(shareData).catch(err => {
-                    console.error('Error sharing:', err);
-                    fallbackTwitterShare();
-                });
+            if (navigator.canShare && navigator.canShare(shareDataWithFile)) {
+                navigator.share(shareDataWithFile)
+                    .then(() => console.log('Shared with file successfully'))
+                    .catch(err => {
+                        console.warn('Error sharing with file:', err);
+                        // Try without files as fallback
+                        fallbackShareWithoutFile();
+                    });
                 return;
+            } else {
+                // If files aren't supported, try without file
+                fallbackShareWithoutFile();
             }
-            
-            // Fallback if files aren't supported
-            navigator.share({
-                title: 'Hag Hours Bingo',
-                text: 'Check out my Hag Hours Bingo board! #HagHours',
-                url: window.location.href
-            }).catch(err => {
-                console.error('Error sharing:', err);
-                fallbackTwitterShare();
-            });
-            return;
         } catch (err) {
-            console.error('Error preparing share:', err);
+            console.error('Error in Web Share API:', err);
+            fallbackTwitterShare();
         }
+    } else {
+        // Fallback to Twitter intent URL
+        fallbackTwitterShare();
     }
     
-    // Fallback to Twitter intent
-    fallbackTwitterShare();
+    // Helper function for sharing without file
+    function fallbackShareWithoutFile() {
+        const shareDataWithoutFile = {
+            title: 'Hag Hours Bingo',
+            text: 'Check out my Hag Hours Bingo board! #HagHours\n' + window.location.href
+        };
+        
+        navigator.share(shareDataWithoutFile)
+            .then(() => console.log('Shared without file successfully'))
+            .catch(err => {
+                console.error('Error sharing without file:', err);
+                fallbackTwitterShare();
+            });
+    }
 }
 
-function fallbackTwitterShare() {
-    const text = encodeURIComponent('Check out my Hag Hours Bingo board! #HagHours');
-    const url = encodeURIComponent(window.location.href);
+// Helper function to convert dataURI to Blob
+function dataURItoBlob(dataURI) {
+    const byteString = atob(dataURI.split(',')[1]);
+    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
     
-    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+    for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    
+    return new Blob([ab], {type: mimeString});
+}
+
+// Traditional Twitter sharing fallback
+function fallbackTwitterShare() {
+    // Save the image to device first
+    const link = document.createElement('a');
+    link.download = 'hag-hours-bingo.png';
+    link.href = window.screenshotImageData;
+    link.click();
+    
+    // Small delay to allow download to start
+    setTimeout(() => {
+        const text = encodeURIComponent('Check out my Hag Hours Bingo board! #HagHours');
+        const url = encodeURIComponent(window.location.href);
+        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+        alert('Your bingo image has been downloaded. You can attach it to your tweet manually.');
+    }, 500);
 }
