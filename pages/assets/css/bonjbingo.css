@@ -645,9 +645,9 @@ input:focus {
         right: 15px;
     }
 
-    #twitterButton {
+    /* #twitterButton {
         display: flex;
-    }
+    } */
 }
 
 /* For very small screens */
