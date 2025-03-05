@@ -3,10 +3,26 @@
 <head>
     <title>Hag Hours Bingo</title>
     <link rel="stylesheet" href="./assets/css/bonjbingo.css">
-    <meta name="description" content="An interactive bingo game for Hag Hours">
+    <!-- Basic Meta Tags -->
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- Preload the background image for better performance -->
-    <link rel="preload" href="./assets/img/bonjBackground.jpg" as="image">
+    <meta name="description" content="Hag Hours Bingo - A fan-made interactive bingo game for Bonnie Barkwell's Hag Hours streams">
+
+    <!-- Open Graph Meta Tags (for Discord, Facebook, etc.) -->
+    <meta property="og:title" content="Hag Hours Bingo">
+    <meta property="og:description" content="A fan-made interactive bingo game for Bonnie Barkwell's Hag Hours streams">
+    <meta property="og:image" content="https://battleprogrammer-san.github.io/pages/assets/img/hagHoursLogo.webp">
+    <meta property="og:url" content="https://battleprogrammer-san.github.io/pages/bonniebingo.html">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Hag Hours Bingo">
+    <meta name="twitter:description" content="A fan-made interactive bingo game for Bonnie Barkwell's Hag Hours streams">
+    <meta name="twitter:image" content="https://battleprogrammer-san.github.io/pages/assets/img/hagHoursLogo.webp">
+
+    <!-- Theme Color for Browser UI -->
+    <meta name="theme-color" content="#1A1712">
 </head>
 <body>
     <!-- Background will be added via JavaScript -->
@@ -20,19 +36,49 @@
         <span></span>
         <span></span>
     </div>
-    <div class="shuffle-button" id="shuffleButton" role="button" aria-label="Shuffle Board" tabindex="0">
-        <svg class="shuffle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <polyline points="16 3 21 3 21 8"></polyline>
-            <line x1="4" y1="20" x2="21" y2="3"></line>
-            <polyline points="21 16 21 21 16 21"></polyline>
-            <line x1="15" y1="15" x2="21" y2="21"></line>
-            <line x1="4" y1="4" x2="9" y2="9"></line>
-        </svg>
+    
+    <!-- Control Buttons Group -->
+    <div class="control-buttons">
+        <div class="shuffle-button" id="shuffleButton" role="button" aria-label="Shuffle Board" tabindex="0" data-tooltip="Shuffle Board">
+            <svg class="control-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="16 3 21 3 21 8"></polyline>
+                <line x1="4" y1="20" x2="21" y2="3"></line>
+                <polyline points="21 16 21 21 16 21"></polyline>
+                <line x1="15" y1="15" x2="21" y2="21"></line>
+                <line x1="4" y1="4" x2="9" y2="9"></line>
+            </svg>
+        </div>
+        
+        <div class="reset-button" id="resetButton" role="button" aria-label="Reset Without Reshuffling" tabindex="0" data-tooltip="Reset Without Reshuffling">
+            <svg class="control-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+            </svg>
+        </div>
+        
+        <div class="bonj-order-button" id="bonjOrderButton" role="button" aria-label="Use Bonj Order" tabindex="0" data-tooltip="Use Bonj Order">
+            <img src="./assets/img/bonjIcon.png" alt="Bonj Icon" class="bonj-icon" aria-hidden="true">
+        </div>
     </div>
+    
     <div class="overlay" id="controlsOverlay" role="dialog" aria-labelledby="controls-title" aria-hidden="true">
         <div class="overlay-content">
             <h2 id="controls-title">Bingo Controls</h2>
             <button class="theme-toggle" onclick="toggleTheme()" aria-pressed="false">Toggle Theme</button>
+           
+            <div class="toggle-container">
+                <label class="label" for="parallaxToggle">
+                    <input type="checkbox" id="parallaxToggle" checked onchange="toggleParallax()">
+                    Enable Background Parallax
+                </label>
+            </div>
+            
+            <div class="toggle-container">
+                <label class="label" for="fireworksToggle">
+                    <input type="checkbox" id="fireworksToggle" checked onchange="toggleFireworks()">
+                    Enable Fireworks on Win
+                </label>
+            </div>
            
             <label class="label" for="cards" id="cards-label">Bingo Cards (one per line):</label>
             <textarea id="cards" aria-labelledby="cards-label" placeholder="Enter bingo cards (one per line)" rows="10" cols="40">Chat starts crying
@@ -73,7 +119,62 @@ Got the sound correct 1st try</textarea>
         <div class="container">
             <div id="board" class="board" role="grid" aria-label="Bingo board" aria-describedby="main-heading"></div>
         </div>
+        <div class="screenshot-container">
+            <button id="screenshotButton" class="screenshot-button" role="button" aria-label="Take Screenshot" tabindex="0">
+                DL
+            </button>
+        </div>
+        
+        <!-- Screenshot Overlay -->
+        <div class="overlay" id="screenshotOverlay" role="dialog" aria-labelledby="screenshot-title" aria-hidden="true">
+            <div class="overlay-content screenshot-overlay-content">
+                <h2 id="screenshot-title">Your Bingo Board Screenshot</h2>
+                <div class="screenshot-preview">
+                    <img id="screenshotImage" alt="Bingo board screenshot" />
+                </div>
+                <div class="screenshot-actions">
+                    <button id="downloadButton" class="action-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                    </button>
+                    <button id="twitterButton" class="action-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" stroke="currentColor" viewBox="0 0 50 50" width="50px" height="50px"><path d="M 5.9199219 6 L 20.582031 27.375 L 6.2304688 44 L 9.4101562 44 L 21.986328 29.421875 L 31.986328 44 L 44 44 L 28.681641 21.669922 L 42.199219 6 L 39.029297 6 L 27.275391 19.617188 L 17.933594 6 L 5.9199219 6 z M 9.7167969 8 L 16.880859 8 L 40.203125 42 L 33.039062 42 L 9.7167969 8 z"/></svg>
+                    </button>
+                    <button class="action-button" onclick="closeScreenshotOverlay()" aria-label="Close screenshot">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                
+            </div>
+        </div>
     </main>
+    
+
+    <div class="info-button" id="infoButton" role="button" aria-label="Show Disclaimer" tabindex="0" data-tooltip="About">
+        <svg class="control-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+    </div>
+
+    <div class="overlay" id="disclaimerOverlay" role="dialog" aria-labelledby="disclaimer-title" aria-hidden="true">
+        <div class="overlay-content">
+            <h2 id="disclaimer-title">Disclaimer</h2>
+            <div class="disclaimer-text">
+                <p>• No data, no cookies, no server, all client</p>
+                <p>• This website is not affiliated with Globie, Brave Group, or Bonnie Barkwell; it's just a fan project</p>
+                <p>• all copyright belongs to their respective owners</p>
+            </div>
+            <button class="close-overlay" onclick="toggleDisclaimer()" aria-label="Close disclaimer">Close</button>
+        </div>
+    </div>
 
     <script src="./assets/js/bonjbingo.js"></script>
 </body>

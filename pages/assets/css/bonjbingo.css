@@ -2,9 +2,9 @@
     --bg-color: #F2ECE0;
     --text-color: #1A1712;
     --checked-text-color: #F2ECE0;
-    --cell-bg: #F2ECE0;
+    --cell-bg: rgb(241, 235, 223, 0.8);
     --cell-border: #1A1712;
-    --cell-checked: #1A1712;
+    --cell-checked: rgb(26, 23, 18, 0.8);
     --button-bg: #F2ECE0;
     --overlay-bg: rgba(242, 236, 224, 0.95);
 }
@@ -13,9 +13,9 @@
     --bg-color: #1A1712;
     --text-color: #F2ECE0;
     --checked-text-color: #1A1712;
-    --cell-bg: #1A1712;
+    --cell-bg: rgb(26, 23, 18, 0.8);
     --cell-border: #F2ECE0;
-    --cell-checked: #F2ECE0;
+    --cell-checked: rgb(242, 236, 224, 0.8);
     --button-bg: #1A1712;
     --overlay-bg: rgba(26, 23, 18, 0.95);
 }
@@ -27,7 +27,6 @@
     left: -5%;
     width: 110%;
     height: 110%;
-    background-image: url('./assets/img/bonjBackground.jpg');
     background-size: cover;
     background-position: center;
     z-index: -1;
@@ -190,15 +189,11 @@ header {
     border-radius: 4px;
     transition: all 0.2s ease;
     user-select: none;
-    font-size: clamp(10px, 2vmin, 16px);
+    font-size: clamp(10px, 2vmin, 24px);
     word-break: break-word;
     overflow: hidden;
     backdrop-filter: blur(2px);
-    background-color: rgba(26, 23, 18, 0.7);
-}
-
-:root[data-theme="light"] .cell {
-    background-color: rgba(242, 236, 224, 0.7);
+    background-color: var(--cell-bg);
 }
 
 .cell:hover {
@@ -369,10 +364,18 @@ input:focus {
     display: block;
 }
 
-.shuffle-button {
+/* Control buttons group */
+.control-buttons {
     position: fixed;
     top: 20px;
     left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 100;
+}
+
+.shuffle-button, .reset-button, .bonj-order-button, .screenshot-button {
     width: 40px;
     height: 40px;
     background: var(--button-bg);
@@ -383,18 +386,36 @@ input:focus {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 100;
     transition: all 0.2s ease;
 }
 
-.shuffle-button:hover {
+.shuffle-button:hover, .reset-button:hover, .bonj-order-button:hover, .screenshot-button:hover {
     background: var(--cell-checked);
     color: var(--checked-text-color);
 }
 
-.shuffle-icon {
+.control-icon {
     width: 24px;
     height: 24px;
+}
+
+.bonj-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Toggle containers for settings */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.toggle-container input[type="checkbox"] {
+    margin-right: 10px;
+    width: auto;
 }
 
 .firework {
@@ -416,6 +437,151 @@ input:focus {
     transform: rotate(var(--angle));
     pointer-events: none;
 }
+
+/* Tooltip styles */
+.control-buttons > div {
+    position: relative;
+}
+
+.control-buttons > div::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--cell-border);
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 100;
+}
+
+.control-buttons > div:hover::after {
+    opacity: 1;
+}
+
+.info-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--cell-border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
+.info-button:hover {
+    background: var(--cell-checked);
+    color: var(--checked-text-color);
+}
+
+.info-button::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--cell-border);
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 100;
+}
+
+.info-button:hover::after {
+    opacity: 1;
+}
+
+.disclaimer-text {
+    margin: 15px 0;
+    line-height: 1.5;
+}
+
+.screenshot-button {
+    position: fixed;
+    bottom: 15px;
+    left: 15px;
+}
+
+.screenshot-button:hover {
+    background: var(--cell-checked);
+    color: var(--checked-text-color);
+}
+
+.screenshot-overlay-content {
+    max-width: 90%;
+    width: auto;
+}
+
+.screenshot-preview {
+    margin: 15px 0;
+    text-align: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.screenshot-preview img {
+    max-width: 100%;
+    max-height: 60vh;
+    object-fit: contain;
+    border: 2px solid var(--cell-border);
+    border-radius: 4px;
+}
+
+.screenshot-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    background: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--cell-border);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.action-button:hover {
+    background: var(--cell-checked);
+    color: var(--checked-text-color);
+}
+
+#twitterButton {
+    display: none;
+}
+
 
 @keyframes launch {
     0% { top: 100vh; transform: scale(1); }
@@ -445,16 +611,23 @@ input:focus {
     }
     
     .board {
+        margin-top: 30px;
         width: min(90vw, 90vh);
         height: min(90vw, 90vh);
+        gap: 2px;
     }
     
     .cell {
         padding: 5px;
     }
     
+    .control-buttons {
+        top: 15px;
+        left: 15px;
+        flex-direction: row;
+    }
     
-    .shuffle-icon {
+    .control-icon, .bonj-icon {
         width: 20px;
         height: 20px;
     }
@@ -465,6 +638,15 @@ input:focus {
     
     textarea {
         height: 150px;
+    }
+
+    .info-button {
+        bottom: 15px;
+        right: 15px;
+    }
+
+    #twitterButton {
+        display: flex;
     }
 }
 
@@ -481,8 +663,10 @@ input:focus {
     }
     
     .board {
+        margin-top: 50px;
         width: 95vw;
         height: 95vw;
+        gap: 0px;
     }
     
     .cell {
@@ -490,16 +674,13 @@ input:focus {
         padding: 3px;
     }
     
-    .menu-toggle, .shuffle-button {
-        top: 15px;
-    }
-    
-    .shuffle-button {
-        left: 15px;
-    }
-    
     .menu-toggle {
+        top: 15px;
         right: 15px;
+    }
+    
+    .control-buttons {
+        left: 15px;
     }
     
     .container {
