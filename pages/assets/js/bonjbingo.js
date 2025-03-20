@@ -573,8 +573,46 @@ function loadSharedBoard() {
 }
 
 function showWinMessage() {
+    // Launch fireworks if enabled
     if (!hasWon && enableFireworks) launchFireworks();
+    
+    // Show the bingo image
+    showBingoImage();
+    
+    // Set hasWon to true
     hasWon = true;	
+}
+
+function showBingoImage() {
+    // Check if bingo image element already exists
+    let bingoImage = document.getElementById('bingoImage');
+    
+    // If it doesn't exist, create it
+    if (!bingoImage) {
+        bingoImage = document.createElement('img');
+        bingoImage.id = 'bingoImage';
+        bingoImage.className = 'bingo-image';
+        bingoImage.src = './assets/img/bingo.png';
+        bingoImage.alt = 'BINGO!';
+        document.body.appendChild(bingoImage);
+    }
+    
+    // Trigger the animation sequence by adding the 'show' class
+    // Short timeout to ensure the DOM is ready
+    setTimeout(() => {
+        bingoImage.classList.add('show');
+        
+        // Remove the image from DOM after animations complete (5 seconds)
+        setTimeout(() => {
+            bingoImage.classList.remove('show');
+            setTimeout(() => {
+                // Optional: remove from DOM after fade out completes
+                if (bingoImage.parentNode) {
+                    bingoImage.parentNode.removeChild(bingoImage);
+                }
+            }, 500);
+        }, 5000);
+    }, 10);
 }
 
 function randomTime(min, max) {
@@ -585,10 +623,10 @@ function launchFireworks() {
     // Only launch fireworks if enabled
     if (!enableFireworks) return;
     
-    for(let i = 0; i < 25; i++) {
+    for(let i = 0; i < 15; i++) {
         setTimeout(() => {
             createFirework();
-        }, i * 50 * randomTime(1, 3));
+        }, i * 100 * randomTime(1, 3));
     }
 }
 
@@ -687,15 +725,49 @@ function takeScreenshot() {
         const cells = boardClone.querySelectorAll('.cell');
         cells.forEach(cell => {
             cell.style.borderRadius = '0';
-            cell.style.backgroundColor = cell.classList.contains('checked') ? 
-                '#F2ECE0' : // Light theme checked cell bg - FULLY OPAQUE
-                '#1A1712';  // Light theme cell bg - FULLY OPAQUE
+            cell.style.backgroundColor = '#1A1712';
             cell.style.color = cell.classList.contains('checked') ? 
                 '#1A1712' : // Light theme checked text
                 '#F2ECE0'; // Light theme text
             cell.style.border = '1px solid #F2ECE0';
             cell.style.opacity = '1'; // Ensure full opacity
             cell.style.fontSize = "24px";
+            
+            // Explicitly add cross image to checked cells for screenshots
+            if (cell.classList.contains('checked')) {
+                // Create a cross overlay element
+                const crossOverlay = document.createElement('div');
+                crossOverlay.style.position = 'absolute';
+                crossOverlay.style.top = '0';
+                crossOverlay.style.left = '0';
+                crossOverlay.style.width = '100%';
+                crossOverlay.style.height = '100%';
+                crossOverlay.style.backgroundImage = 'url("./assets/img/crossDark.png")';
+                crossOverlay.style.backgroundSize = 'cover';
+                crossOverlay.style.backgroundPosition = 'center';
+                crossOverlay.style.pointerEvents = 'none';
+                crossOverlay.style.zIndex = '1';
+                
+                // Create a wrapper for proper positioning
+                if (window.getComputedStyle(cell).position === 'static') {
+                    cell.style.position = 'relative';
+                }
+                
+                // Append the cross overlay
+                cell.appendChild(crossOverlay);
+                
+                // For screenshots, use a different approach to invert text color
+                // Create a special span and move the cell text into it with inverted color
+                const originalText = cell.textContent;
+                cell.textContent = '';
+                const textSpan = document.createElement('span');
+                textSpan.textContent = originalText;
+                textSpan.style.position = 'relative';
+                textSpan.style.zIndex = '2';
+                textSpan.style.mixBlendMode = 'difference';
+                textSpan.style.color = '#FFFFFF'; // White text for difference blend
+                cell.appendChild(textSpan);
+            }
         });
         
         // Add logo above and overlapping the board
@@ -787,10 +859,14 @@ function downloadScreenshot() {
         return;
     }
     
+    // Create timestamp
+    const now = new Date();
+    const timestamp = now.toISOString().replace(/[:.]/g, '-');
+    
     // Create a download link
     const link = document.createElement('a');
     link.href = window.screenshotImageData;
-    link.download = 'hag-hours-bingo.png';
+    link.download = `hag-hours-bingo_${timestamp}.png`;
     
     // Trigger download
     document.body.appendChild(link);
