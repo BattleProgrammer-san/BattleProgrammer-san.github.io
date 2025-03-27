@@ -106,18 +106,11 @@ body {
 .board {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
     gap: 5px;
-    width: 80vmin;
-    height: 80vmin;
-    max-width: 700px;
-    max-height: 700px;
+    animation: fadeIn 0.3s ease-out;
+    width: min(80vw, 80vh);
+    height: min(80vw, 80vh);
     margin: 0 auto;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: rgba(0,0,0,0.2);
-    padding: 5px;
-    box-shadow: 0 4px 30px rgba(0,0,0,0.25);
 }
 
 /* Cell styles */
